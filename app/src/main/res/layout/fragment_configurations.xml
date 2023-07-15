@@ -81,7 +81,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_speed"
-            android:tint="@color/iconTint" />
+            android:tint="@color/black" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -97,8 +97,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_weight="1"
-            android:max="100"
-            app:tickMark="@drawable/seekbar_tick_mark" />
+            android:max="100"/>
+<!--            app:tickMark="@drawable/seekbar_tick_mark" -->
+<!--            />-->
 
     </LinearLayout>
 
@@ -197,7 +198,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="AP Mode"
+            android:text="AP Mode/ Wifi"
             android:textSize="16sp"
             android:textStyle="bold" />
 
