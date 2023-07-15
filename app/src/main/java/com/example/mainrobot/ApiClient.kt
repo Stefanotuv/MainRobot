@@ -13,18 +13,29 @@ import java.net.URL
 class ApiClient {
     private val TAG = "ApiClient"
 
-    fun sendRequest(url: String, method: String, key: String? = null, value: String? = null, callback: (String) -> Unit) {
+//    fun sendRequest(url: String, method: String, key: String? = null, value: String? = null, callback: (String) -> Unit) {
+//        if (method == "GET") {
+//            GetRequestTask(callback).execute(url)
+//        } else {
+//            val data = JSONObject()
+//            if (key != null && value != null) {
+//                data.put(key, value)
+//            }
+//
+//            PostRequestTask(callback).execute(url, data.toString())
+//        }
+//    }
+
+    fun sendRequest(url: String, method: String, json: JSONObject? = null, callback: (String) -> Unit) {
         if (method == "GET") {
             GetRequestTask(callback).execute(url)
         } else {
-            val data = JSONObject()
-            if (key != null && value != null) {
-                data.put(key, value)
-            }
+            val data = json?.toString() ?: ""
 
-            PostRequestTask(callback).execute(url, data.toString())
+            PostRequestTask(callback).execute(url, data)
         }
     }
+
 
     private inner class GetRequestTask(private val callback: (String) -> Unit) : AsyncTask<String, Void, String>() {
         override fun doInBackground(vararg urls: String): String {
