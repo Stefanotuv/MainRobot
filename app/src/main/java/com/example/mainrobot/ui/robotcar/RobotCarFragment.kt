@@ -94,20 +94,28 @@ class RobotCarFragment : Fragment(), JoystickView.JoystickListener {
         // Not used for individual joysticks
     }
 
+    private var lastPostTime: Long = 0
+    private val postThrottleInterval: Long = 500 // Throttle interval in milliseconds
+
     private fun handleJoystickMoved(x: Float, y: Float, joypad: String) {
-        val (scaledX, scaledY) = scaleCoordinate(x, y)
-        joystickTopCoordinates.text = "X: ${String.format("%.2f", scaledX)}\nY: ${String.format("%.2f", scaledY)}"
-        joystickBottomCoordinates.text = "X: ${String.format("%.2f", scaledX)}\nY: ${String.format("%.2f", scaledY)}"
+        val currentTime = System.currentTimeMillis()
+        if (currentTime - lastPostTime >= postThrottleInterval) {
+            val (scaledX, scaledY) = scaleCoordinate(x, y)
+            joystickTopCoordinates.text = "X: ${String.format("%.2f", scaledX)}\nY: ${String.format("%.2f", scaledY)}"
+            joystickBottomCoordinates.text = "X: ${String.format("%.2f", scaledX)}\nY: ${String.format("%.2f", scaledY)}"
 
-        val inputData = JSONObject().apply {
-            put("scaledX", scaledX)
-            put("scaledY", scaledY)
-            put("joypad", joypad)
-        }
+            val inputData = JSONObject().apply {
+                put("scaledX", scaledX)
+                put("scaledY", scaledY)
+                put("joypad", joypad)
+            }
 
-        apiClient.sendRequest(addressRobotCar, "POST", inputData) { response ->
-            // Handle the API response here
-            Log.d("RobotCarFragment", "API Response: $response")
+            apiClient.sendRequest(addressRobotCar, "POST", inputData) { response ->
+                // Handle the API response here
+                Log.d("RobotCarFragment", "API Response: $response")
+            }
+
+            lastPostTime = currentTime
         }
     }
 
@@ -126,6 +134,7 @@ class RobotCarFragment : Fragment(), JoystickView.JoystickListener {
             Log.d("RobotCarFragment", "API Response: $response")
         }
     }
+
 
     private fun scaleCoordinate(x: Float, y: Float): Pair<Float, Float> {
         val angle = Math.atan2(y.toDouble(), x.toDouble()).toFloat()
