@@ -1,6 +1,5 @@
 package com.example.mainrobot.ui.robotcar
 
-
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.Log
@@ -11,7 +10,6 @@ import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.example.mainrobot.ApiClient
 import com.example.mainrobot.databinding.FragmentRobotcarBinding
 import com.example.mainrobot.JoystickView
@@ -20,18 +18,14 @@ import org.json.JSONObject
 
 class RobotCarFragment : Fragment(), JoystickView.JoystickListener {
 
-//    val robocarViewModel = ViewModelProvider(requireActivity()).get(RobocarViewModel::class.java)
-//    val robocarViewModel = ViewModelProvider(this).get(RobocarViewModel::class.java)
-
-//    robocarViewModel.robocarAddress.observe(viewLifecycleOwner) { address ->
-//        // Use the Robocar address here
-//    }
-
     private lateinit var binding: FragmentRobotcarBinding
     private lateinit var webView: WebView
     private lateinit var joystickTopCoordinates: TextView
     private lateinit var joystickBottomCoordinates: TextView
     private val videoUrl = "http://192.168.2.235:81/stream" // Replace with your IP camera video URL
+
+    private val apiClient = ApiClient()
+    private val addressRobotCar = "http://192.168.2.242/api"
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,30 +53,7 @@ class RobotCarFragment : Fragment(), JoystickView.JoystickListener {
 
         // Initialize the JoystickViews
         binding.joystickTop.setJoystickListener(this)
-        binding.joystickBottom.setJoystickListener(object : JoystickView.JoystickListener {
-            override fun onJoystickMoved(x: Float, y: Float) {
-                val (scaledX, scaledY) = scaleCoordinate(x, y)
-                joystickBottomCoordinates.text =
-                    "X: ${String.format("%.2f", scaledX)}\nY: ${String.format("%.2f", scaledY)}"
-                val inputData = JSONObject().apply {
-                    put("scaledX", scaledX)
-                    put("scaledY", scaledY)
-                    put("joypad", "joypad")
-
-                }
-                val apiClient = ApiClient()
-                val address_robotcar = "http://192.168.2.242/api"
-                apiClient.sendRequest(address_robotcar, "POST", inputData) { response ->
-                    // Handle the API response here
-                    Log.d("RobotCarFragment", "API Response: $response")
-                }
-
-            }
-
-            override fun onJoystickReleased() {
-                joystickBottomCoordinates.text = "X: 0.00\nY: 0.00"
-            }
-        })
+        binding.joystickBottom.setJoystickListener(this)
 
         return root
     }
@@ -101,10 +72,23 @@ class RobotCarFragment : Fragment(), JoystickView.JoystickListener {
     override fun onJoystickMoved(x: Float, y: Float) {
         val (scaledX, scaledY) = scaleCoordinate(x, y)
         joystickTopCoordinates.text = "X: ${String.format("%.2f", scaledX)}\nY: ${String.format("%.2f", scaledY)}"
+        joystickBottomCoordinates.text = "X: ${String.format("%.2f", scaledX)}\nY: ${String.format("%.2f", scaledY)}"
+
+        val inputData = JSONObject().apply {
+            put("scaledX", scaledX)
+            put("scaledY", scaledY)
+            put("joypad", "joypad")
+        }
+
+        apiClient.sendRequest(addressRobotCar, "POST", inputData) { response ->
+            // Handle the API response here
+            Log.d("RobotCarFragment", "API Response: $response")
+        }
     }
 
     override fun onJoystickReleased() {
         joystickTopCoordinates.text = "X: 0.00\nY: 0.00"
+        joystickBottomCoordinates.text = "X: 0.00\nY: 0.00"
     }
 
     private fun scaleCoordinate(x: Float, y: Float): Pair<Float, Float> {
