@@ -1,0 +1,14 @@
+<resources>
+    <!-- Base application theme -->
+<!--    <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">-->
+<!--        &lt;!&ndash; Customize your theme here &ndash;&gt;-->
+<!--        <item name="colorPrimary">@color/colorPrimary</item>-->
+<!--        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
+<!--        <item name="colorAccent">@color/colorAccent</item>-->
+<!--    </style>-->
+
+    <!-- Custom style for white text on the Switch -->
+    <style name="WhiteSwitchText" parent="Widget.MaterialComponents.CompoundButton.Switch">
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+</resources>
