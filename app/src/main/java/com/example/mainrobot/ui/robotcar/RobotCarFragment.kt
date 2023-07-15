@@ -3,6 +3,7 @@ package com.example.mainrobot.ui.robotcar
 
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,10 +11,21 @@ import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import com.example.mainrobot.ApiClient
 import com.example.mainrobot.databinding.FragmentRobotcarBinding
 import com.example.mainrobot.JoystickView
+import com.example.mainrobot.RobocarViewModel
+import org.json.JSONObject
 
 class RobotCarFragment : Fragment(), JoystickView.JoystickListener {
+
+//    val robocarViewModel = ViewModelProvider(requireActivity()).get(RobocarViewModel::class.java)
+//    val robocarViewModel = ViewModelProvider(this).get(RobocarViewModel::class.java)
+
+//    robocarViewModel.robocarAddress.observe(viewLifecycleOwner) { address ->
+//        // Use the Robocar address here
+//    }
 
     private lateinit var binding: FragmentRobotcarBinding
     private lateinit var webView: WebView
@@ -52,6 +64,19 @@ class RobotCarFragment : Fragment(), JoystickView.JoystickListener {
                 val (scaledX, scaledY) = scaleCoordinate(x, y)
                 joystickBottomCoordinates.text =
                     "X: ${String.format("%.2f", scaledX)}\nY: ${String.format("%.2f", scaledY)}"
+                val inputData = JSONObject().apply {
+                    put("scaledX", scaledX)
+                    put("scaledY", scaledY)
+                    put("joypad", "joypad")
+
+                }
+                val apiClient = ApiClient()
+                val address_robotcar = "http://192.168.2.242/api"
+                apiClient.sendRequest(address_robotcar, "POST", inputData) { response ->
+                    // Handle the API response here
+                    Log.d("RobotCarFragment", "API Response: $response")
+                }
+
             }
 
             override fun onJoystickReleased() {
