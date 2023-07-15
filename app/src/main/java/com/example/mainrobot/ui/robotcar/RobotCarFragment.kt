@@ -52,8 +52,25 @@ class RobotCarFragment : Fragment(), JoystickView.JoystickListener {
         joystickBottomCoordinates = binding.joystickBottomCoordinates
 
         // Initialize the JoystickViews
-        binding.joystickTop.setJoystickListener(this)
-        binding.joystickBottom.setJoystickListener(this)
+        binding.joystickTop.setJoystickListener(object : JoystickView.JoystickListener {
+            override fun onJoystickMoved(x: Float, y: Float) {
+                handleJoystickMoved(x, y, "top")
+            }
+
+            override fun onJoystickReleased() {
+                handleJoystickReleased("top")
+            }
+        })
+
+        binding.joystickBottom.setJoystickListener(object : JoystickView.JoystickListener {
+            override fun onJoystickMoved(x: Float, y: Float) {
+                handleJoystickMoved(x, y, "bottom")
+            }
+
+            override fun onJoystickReleased() {
+                handleJoystickReleased("bottom")
+            }
+        })
 
         return root
     }
@@ -70,6 +87,14 @@ class RobotCarFragment : Fragment(), JoystickView.JoystickListener {
     }
 
     override fun onJoystickMoved(x: Float, y: Float) {
+        // Not used for individual joysticks
+    }
+
+    override fun onJoystickReleased() {
+        // Not used for individual joysticks
+    }
+
+    private fun handleJoystickMoved(x: Float, y: Float, joypad: String) {
         val (scaledX, scaledY) = scaleCoordinate(x, y)
         joystickTopCoordinates.text = "X: ${String.format("%.2f", scaledX)}\nY: ${String.format("%.2f", scaledY)}"
         joystickBottomCoordinates.text = "X: ${String.format("%.2f", scaledX)}\nY: ${String.format("%.2f", scaledY)}"
@@ -77,7 +102,7 @@ class RobotCarFragment : Fragment(), JoystickView.JoystickListener {
         val inputData = JSONObject().apply {
             put("scaledX", scaledX)
             put("scaledY", scaledY)
-            put("joypad", "joypad")
+            put("joypad", joypad)
         }
 
         apiClient.sendRequest(addressRobotCar, "POST", inputData) { response ->
@@ -86,9 +111,20 @@ class RobotCarFragment : Fragment(), JoystickView.JoystickListener {
         }
     }
 
-    override fun onJoystickReleased() {
+    private fun handleJoystickReleased(joypad: String) {
         joystickTopCoordinates.text = "X: 0.00\nY: 0.00"
         joystickBottomCoordinates.text = "X: 0.00\nY: 0.00"
+
+        val inputData = JSONObject().apply {
+            put("scaledX", 0)
+            put("scaledY", 0)
+            put("joypad", joypad)
+        }
+
+        apiClient.sendRequest(addressRobotCar, "POST", inputData) { response ->
+            // Handle the API response here
+            Log.d("RobotCarFragment", "API Response: $response")
+        }
     }
 
     private fun scaleCoordinate(x: Float, y: Float): Pair<Float, Float> {
@@ -113,3 +149,4 @@ class RobotCarFragment : Fragment(), JoystickView.JoystickListener {
         layoutParamsBottom.height = joystickSize
     }
 }
+
