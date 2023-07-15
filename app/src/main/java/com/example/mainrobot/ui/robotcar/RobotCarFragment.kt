@@ -95,7 +95,7 @@ class RobotCarFragment : Fragment(), JoystickView.JoystickListener {
     }
 
     private var lastPostTime: Long = 0
-    private val postThrottleInterval: Long = 500 // Throttle interval in milliseconds
+    private val postThrottleInterval: Long = 250 // Throttle interval in milliseconds
 
     private fun handleJoystickMoved(x: Float, y: Float, joypad: String) {
         val currentTime = System.currentTimeMillis()
