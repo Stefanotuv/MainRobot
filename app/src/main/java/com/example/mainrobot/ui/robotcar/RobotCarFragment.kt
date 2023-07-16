@@ -133,6 +133,8 @@ class RobotCarFragment : Fragment(), JoystickView.JoystickListener {
                 Log.d("RobotCarFragment", "API Response: $response")
             }
 
+            Log.d("RobotCarFragment", "Request POST sent: joypad=$joypad, scaledX=$scaledX, scaledY=$scaledY")
+
             lastPostTime = currentTime
         }
     }
@@ -154,7 +156,11 @@ class RobotCarFragment : Fragment(), JoystickView.JoystickListener {
             // Handle the API response here
             Log.d("RobotCarFragment", "API Response: $response")
         }
+
+        Log.d("RobotCarFragment", "Request POST sent: joypad=$joypad, scaledX=0, scaledY=0")
     }
+
+
 
     private fun scaleCoordinate(x: Float, y: Float): Pair<Float, Float> {
         val angle = Math.atan2(y.toDouble(), x.toDouble()).toFloat()
