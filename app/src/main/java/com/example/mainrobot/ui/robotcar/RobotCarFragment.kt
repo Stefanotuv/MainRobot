@@ -111,13 +111,16 @@ class RobotCarFragment : Fragment(), JoystickView.JoystickListener {
 
     private var lastPostTime: Long = 0
     private val postThrottleInterval: Long = 250 // Throttle interval in milliseconds
-
     private fun handleJoystickMoved(x: Float, y: Float, joypad: String) {
         val currentTime = System.currentTimeMillis()
         if (currentTime - lastPostTime >= postThrottleInterval) {
             val (scaledX, scaledY) = scaleCoordinate(x, y)
-            joystickTopCoordinates.text = "X: ${String.format("%.2f", scaledX)}\nY: ${String.format("%.2f", scaledY)}"
-            joystickBottomCoordinates.text = "X: ${String.format("%.2f", scaledX)}\nY: ${String.format("%.2f", scaledY)}"
+
+            if (joypad == "top") {
+                joystickTopCoordinates.text = "X: ${String.format("%.2f", scaledX)}\nY: ${String.format("%.2f", scaledY)}"
+            } else if (joypad == "bottom") {
+                joystickBottomCoordinates.text = "X: ${String.format("%.2f", scaledX)}\nY: ${String.format("%.2f", scaledY)}"
+            }
 
             val inputData = JSONObject().apply {
                 put("scaledX", scaledX)
@@ -135,8 +138,11 @@ class RobotCarFragment : Fragment(), JoystickView.JoystickListener {
     }
 
     private fun handleJoystickReleased(joypad: String) {
-        joystickTopCoordinates.text = "X: 0.00\nY: 0.00"
-        joystickBottomCoordinates.text = "X: 0.00\nY: 0.00"
+        if (joypad == "top") {
+            joystickTopCoordinates.text = "X: 0.00\nY: 0.00"
+        } else if (joypad == "bottom") {
+            joystickBottomCoordinates.text = "X: 0.00\nY: 0.00"
+        }
 
         val inputData = JSONObject().apply {
             put("scaledX", 0)
