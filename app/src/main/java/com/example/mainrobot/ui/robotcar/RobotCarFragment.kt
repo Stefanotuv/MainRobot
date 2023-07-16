@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebChromeClient
 import android.webkit.WebView
+import android.widget.Switch
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.mainrobot.ApiClient
@@ -22,7 +23,8 @@ class RobotCarFragment : Fragment(), JoystickView.JoystickListener {
     private lateinit var webView: WebView
     private lateinit var joystickTopCoordinates: TextView
     private lateinit var joystickBottomCoordinates: TextView
-    private val videoUrl = "http://192.168.2.235:81/stream" // Replace with your IP camera video URL
+    private lateinit var switchButton: Switch
+    private var videoUrl = "http://192.168.2.235:81/stream" // Replace with your IP camera video URL
 
     private val apiClient = ApiClient()
     private val addressRobotCar = "http://192.168.2.242/api"
@@ -50,6 +52,19 @@ class RobotCarFragment : Fragment(), JoystickView.JoystickListener {
         // Initialize the TextViews
         joystickTopCoordinates = binding.joystickTopCoordinates
         joystickBottomCoordinates = binding.joystickBottomCoordinates
+
+        // Initialize the Switch
+        switchButton = binding.switchButton
+        switchButton.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                videoUrl = "http://192.168.2.242:81/stream"
+            } else {
+                videoUrl = "http://192.168.2.235:81/stream"
+            }
+            Log.d("RobotCarFragment", "Switch value changed: $isChecked")
+            webView.loadUrl(videoUrl) // Update the video URL in the WebView
+        }
+
 
         // Initialize the JoystickViews
         binding.joystickTop.setJoystickListener(object : JoystickView.JoystickListener {
@@ -135,7 +150,6 @@ class RobotCarFragment : Fragment(), JoystickView.JoystickListener {
         }
     }
 
-
     private fun scaleCoordinate(x: Float, y: Float): Pair<Float, Float> {
         val angle = Math.atan2(y.toDouble(), x.toDouble()).toFloat()
         val radius = 1.0f
@@ -158,4 +172,3 @@ class RobotCarFragment : Fragment(), JoystickView.JoystickListener {
         layoutParamsBottom.height = joystickSize
     }
 }
-

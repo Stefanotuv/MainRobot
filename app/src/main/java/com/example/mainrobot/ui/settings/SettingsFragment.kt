@@ -31,10 +31,10 @@ class SettingsFragment : Fragment() {
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
         val root: View = binding.root
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        val textView: TextView = binding.textSettings
-        slideshowViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
+//        val textView: TextView = binding.textSettings
+//        slideshowViewModel.text.observe(viewLifecycleOwner) {
+//            textView.text = it
+//        }
         webView = binding.webView
         webView.settings.javaScriptEnabled = true
         webView.settings.useWideViewPort = true
