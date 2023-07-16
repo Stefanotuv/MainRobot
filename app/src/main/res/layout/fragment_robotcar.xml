@@ -5,10 +5,12 @@
     android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <SurfaceView
         android:id="@+id/surfaceView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
     <WebView
         android:id="@+id/webView"
         android:layout_width="match_parent"
@@ -70,4 +72,19 @@
         android:layout_marginBottom="32dp"
         style="@style/WhiteSwitchText"/>
 
+    <TextView
+        android:id="@+id/textDistance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:text="Distance: N/A"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        tools:ignore="RtlSymmetry"
+        android:layout_above="@id/joystick_top"
+        android:layout_marginBottom="16dp" />
+
 </RelativeLayout>
+
