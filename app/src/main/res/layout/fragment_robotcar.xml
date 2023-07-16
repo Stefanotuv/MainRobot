@@ -79,7 +79,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="8dp"
         android:text="Distance: N/A"
-        android:textColor="#000000"
+        android:textColor="#FDFCFC"
         android:textSize="18sp"
         android:textStyle="bold"
         tools:ignore="RtlSymmetry"
