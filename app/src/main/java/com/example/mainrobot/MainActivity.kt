@@ -32,9 +32,9 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.appBarMain.toolbar)
 
-        binding.appBarMain.fab.setOnClickListener { view ->
-            // Handle FAB click
-        }
+//        binding.appBarMain.fab.setOnClickListener { view ->
+//            // Handle FAB click
+//        }
 
         drawerLayout = binding.drawerLayout
         navView = binding.navView
