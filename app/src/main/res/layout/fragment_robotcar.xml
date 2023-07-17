@@ -86,5 +86,25 @@
         android:layout_above="@id/joystick_top"
         android:layout_marginBottom="16dp" />
 
+    <TextView
+        android:id="@+id/textPan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pan: 0°"
+        android:textColor="#FFFFFF"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp" />
+
+    <TextView
+        android:id="@+id/textTilt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tilt: 0°"
+        android:textColor="#FFFFFF"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_below="@id/textPan" />
+
 </RelativeLayout>
+
 
