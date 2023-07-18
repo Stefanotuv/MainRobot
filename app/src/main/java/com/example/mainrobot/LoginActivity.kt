@@ -1,5 +1,5 @@
 package com.example.mainrobot
-
+//class before the code to manage the user login across the app
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
