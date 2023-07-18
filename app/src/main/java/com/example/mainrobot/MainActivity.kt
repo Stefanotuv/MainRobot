@@ -1,8 +1,8 @@
 package com.example.mainrobot
-import LoginActivity
+
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -24,24 +24,20 @@ class MainActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navView: NavigationView
     private lateinit var navController: NavController
-    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        sharedPreferences = getSharedPreferences("login_prefs", MODE_PRIVATE)
-        val isLoggedIn = sharedPreferences.getBoolean("is_logged_in", false)
-
-        if (!isLoggedIn) {
-            startLoginActivity()
-            return
-        }
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setSupportActionBar(binding.appBarMain.toolbar)
 
+//        binding.appBarMain.fab.setOnClickListener { view ->
+//            // Handle FAB click
+//        }
+        val sharedPreferences = getSharedPreferences("login_prefs", MODE_PRIVATE)
+        sharedPreferences.edit().putBoolean("is_logged_in", true).apply()
         drawerLayout = binding.drawerLayout
         navView = binding.navView
         navController = findNavController(R.id.nav_host_fragment_content_main)
@@ -53,6 +49,15 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+        navView.setNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.nav_logout -> {
+                    performLogout()
+                    true
+                }
+                else -> false
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -75,23 +80,25 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
+    private fun performLogout() {
+        // Implement your logout logic here
+        // For example, clear the user session, navigate to the login page, etc.
+        // You can start the LoginActivity using an explicit intent
+        // Here's an example of clearing a login status flag
+        val sharedPreferences = getSharedPreferences("login_prefs", MODE_PRIVATE)
+        sharedPreferences.edit().putBoolean("is_logged_in", false).apply()
+        Log.d("MainActivity", "Logged out")
+        // Navigate to LoginActivity
+        val intent = Intent(this, LoginActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
     override fun onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START)
         } else {
             super.onBackPressed()
         }
-    }
-
-    private fun performLogout() {
-        sharedPreferences.edit().putBoolean("is_logged_in", false).apply()
-        startLoginActivity()
-    }
-
-    private fun startLoginActivity() {
-        val intent = Intent(this, LoginActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-        startActivity(intent)
-        finish()
     }
 }
